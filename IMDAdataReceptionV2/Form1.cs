@@ -15,7 +15,7 @@ using System.Net.Sockets;
 
 namespace IMDAdataReceptionV2 {
     public partial class Form1 : Form {
-
+        //PRUEBA
         // Serial variables
         List<int> xValues = new List<int>();
         List<int> yValues = new List<int>();
