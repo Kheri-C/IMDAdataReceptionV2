@@ -25,8 +25,9 @@ namespace IMDAdataReceptionV2 {
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -39,14 +40,15 @@ namespace IMDAdataReceptionV2 {
             this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.statusIndicator = new System.Windows.Forms.ProgressBar();
+            this.portInput = new System.Windows.Forms.TextBox();
+            this.serverAddress = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.udpOffButton = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.chat = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.udpOnButton = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.textBox4 = new System.Windows.Forms.TextBox();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -63,7 +65,7 @@ namespace IMDAdataReceptionV2 {
             this.groupBox2.Controls.Add(this.comboBox1);
             this.groupBox2.Controls.Add(this.comboBox2);
             this.groupBox2.Controls.Add(this.label1);
-            this.groupBox2.Location = new System.Drawing.Point(12, 39);
+            this.groupBox2.Location = new System.Drawing.Point(12, 12);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(378, 401);
             this.groupBox2.TabIndex = 2;
@@ -92,14 +94,14 @@ namespace IMDAdataReceptionV2 {
             // 
             // chart1
             // 
-            chartArea3.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea3);
+            chartArea1.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea1);
             this.chart1.Location = new System.Drawing.Point(6, 139);
             this.chart1.Name = "chart1";
-            series3.ChartArea = "ChartArea1";
-            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series3.Name = "Series1";
-            this.chart1.Series.Add(series3);
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series1.Name = "Series1";
+            this.chart1.Series.Add(series1);
             this.chart1.Size = new System.Drawing.Size(366, 227);
             this.chart1.TabIndex = 10;
             this.chart1.Text = "chart1";
@@ -165,20 +167,52 @@ namespace IMDAdataReceptionV2 {
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.textBox4);
-            this.groupBox1.Controls.Add(this.textBox3);
+            this.groupBox1.Controls.Add(this.label7);
+            this.groupBox1.Controls.Add(this.statusIndicator);
+            this.groupBox1.Controls.Add(this.portInput);
+            this.groupBox1.Controls.Add(this.serverAddress);
             this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.udpOffButton);
-            this.groupBox1.Controls.Add(this.textBox1);
+            this.groupBox1.Controls.Add(this.chat);
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.udpOnButton);
             this.groupBox1.Controls.Add(this.label6);
-            this.groupBox1.Location = new System.Drawing.Point(410, 39);
+            this.groupBox1.Location = new System.Drawing.Point(410, 12);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(378, 401);
             this.groupBox1.TabIndex = 11;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "UDP";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(229, 377);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(37, 13);
+            this.label7.TabIndex = 12;
+            this.label7.Text = "Status";
+            // 
+            // statusIndicator
+            // 
+            this.statusIndicator.Location = new System.Drawing.Point(272, 372);
+            this.statusIndicator.Name = "statusIndicator";
+            this.statusIndicator.Size = new System.Drawing.Size(100, 23);
+            this.statusIndicator.TabIndex = 11;
+            // 
+            // portInput
+            // 
+            this.portInput.Location = new System.Drawing.Point(196, 43);
+            this.portInput.Name = "portInput";
+            this.portInput.Size = new System.Drawing.Size(100, 20);
+            this.portInput.TabIndex = 10;
+            // 
+            // serverAddress
+            // 
+            this.serverAddress.Enabled = false;
+            this.serverAddress.Location = new System.Drawing.Point(6, 44);
+            this.serverAddress.Name = "serverAddress";
+            this.serverAddress.Size = new System.Drawing.Size(158, 20);
+            this.serverAddress.TabIndex = 9;
             // 
             // label3
             // 
@@ -189,25 +223,15 @@ namespace IMDAdataReceptionV2 {
             this.label3.TabIndex = 8;
             this.label3.Text = "Message history";
             // 
-            // udpOffButton
+            // chat
             // 
-            this.udpOffButton.Enabled = false;
-            this.udpOffButton.Location = new System.Drawing.Point(196, 372);
-            this.udpOffButton.Name = "udpOffButton";
-            this.udpOffButton.Size = new System.Drawing.Size(157, 23);
-            this.udpOffButton.TabIndex = 4;
-            this.udpOffButton.Text = "Turn Off";
-            this.udpOffButton.UseVisualStyleBackColor = true;
-            // 
-            // textBox1
-            // 
-            this.textBox1.Enabled = false;
-            this.textBox1.Location = new System.Drawing.Point(6, 98);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(366, 268);
-            this.textBox1.TabIndex = 0;
+            this.chat.Enabled = false;
+            this.chat.Location = new System.Drawing.Point(6, 98);
+            this.chat.Multiline = true;
+            this.chat.Name = "chat";
+            this.chat.ReadOnly = true;
+            this.chat.Size = new System.Drawing.Size(366, 268);
+            this.chat.TabIndex = 0;
             // 
             // label5
             // 
@@ -224,7 +248,7 @@ namespace IMDAdataReceptionV2 {
             this.udpOnButton.Name = "udpOnButton";
             this.udpOnButton.Size = new System.Drawing.Size(158, 23);
             this.udpOnButton.TabIndex = 3;
-            this.udpOnButton.Text = "Turn On";
+            this.udpOnButton.Text = "Turn ON / OFF";
             this.udpOnButton.UseVisualStyleBackColor = true;
             this.udpOnButton.Click += new System.EventHandler(this.udpOnButton_Click);
             // 
@@ -237,27 +261,14 @@ namespace IMDAdataReceptionV2 {
             this.label6.TabIndex = 7;
             this.label6.Text = "IP Address";
             // 
-            // textBox3
-            // 
-            this.textBox3.Location = new System.Drawing.Point(6, 44);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(158, 20);
-            this.textBox3.TabIndex = 9;
-            // 
-            // textBox4
-            // 
-            this.textBox4.Location = new System.Drawing.Point(196, 43);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(100, 20);
-            this.textBox4.TabIndex = 10;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 484);
+            this.ClientSize = new System.Drawing.Size(800, 427);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox2);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.Text = "ComLinK";
             this.groupBox2.ResumeLayout(false);
@@ -284,13 +295,14 @@ namespace IMDAdataReceptionV2 {
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button udpOffButton;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox chat;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button udpOnButton;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox textBox4;
-        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.TextBox portInput;
+        private System.Windows.Forms.TextBox serverAddress;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.ProgressBar statusIndicator;
     }
 }
 

@@ -16,27 +16,33 @@ using System.Net.Sockets;
 namespace IMDAdataReceptionV2 {
     public partial class Form1 : Form {
 
+        // Serial variables
         List<int> xValues = new List<int>();
         List<int> yValues = new List<int>();
         int n = 1;
-        IPAddress ip;
+        // UDP variables
         int port;
+        String[] chatHistoryArray = new String[10];
+        String chatHistory, hostAddress;
+        Thread serverThread;
+        IPEndPoint serverEP;
+        UdpClient udpServer;
+        bool status, started = false, turnedOff;
 
         public Form1() {
             InitializeComponent();
+            // Change char appearance
             chart1.ChartAreas["ChartArea1"].AxisX.MajorGrid.LineColor = Color.Gainsboro;
             chart1.ChartAreas["ChartArea1"].AxisY.MajorGrid.LineColor = Color.Gainsboro;
             chart1.Series[0].BorderWidth = 5;
-            getAvailablePorts();
+            String[] ports = SerialPort.GetPortNames(); // Get availabre Serial ports
+            comboBox1.Items.AddRange(ports); // Display the ports
             serialPort1.DataReceived += new SerialDataReceivedEventHandler(OnDataReceived);
+            hostAddress = Dns.GetHostByName(Dns.GetHostName()).AddressList[0].ToString(); // Get server's IP Address
+            serverAddress.Text = hostAddress; // Display the server's IP Address
         }
 
-        void getAvailablePorts() {
-            String[] ports = SerialPort.GetPortNames();
-            comboBox1.Items.AddRange(ports);
-        }
-
-        private void button3_Click(object sender, EventArgs e) {
+        private void button3_Click(object sender, EventArgs e) { // Open Serial port
             try {
                 if(comboBox1.Text == "" || comboBox2.Text == "") {
                     textBox2.Text = "Please select port settings";
@@ -54,7 +60,7 @@ namespace IMDAdataReceptionV2 {
             }
         }
 
-        private void button4_Click(object sender, EventArgs e) {
+        private void button4_Click(object sender, EventArgs e) { // Close Serial port
             serialPort1.Close();
             serialCloseButton.Enabled = false;
             serialOpenButton.Enabled = true;
@@ -62,8 +68,8 @@ namespace IMDAdataReceptionV2 {
 
         private void OnDataReceived(object sender, SerialDataReceivedEventArgs e) {
             this.Invoke((MethodInvoker)delegate {
-                textBox2.Text = serialPort1.ReadLine();
-                if (n < 11) {
+                textBox2.Text = serialPort1.ReadLine(); 
+                if (n < 11) { // First 10 received messages
                     xValues.Add(n);
                     yValues.Add(Convert.ToInt32(textBox2.Text));
                     n++;
@@ -71,7 +77,7 @@ namespace IMDAdataReceptionV2 {
                     chart1.Invalidate();
                 }
                 else {
-                    for(int i=1; i<10; i++) {
+                    for(int i=1; i<10; i++) { 
                         yValues[i - 1] = yValues[i];
                     }
                     yValues[9] = Convert.ToInt32(serialPort1.ReadLine());
@@ -82,12 +88,68 @@ namespace IMDAdataReceptionV2 {
             });
         }
 
-        private void udpOnButton_Click(object sender, EventArgs e) {
-            if(IPAddress.TryParse(textBox3.Text, out ip) && int.TryParse(textBox4.Text, out port)) {
-
+        void Listen() {
+            while (true) {
+                byte[] inputData = udpServer.Receive(ref serverEP); // Receive the informations
+                if (turnedOff) { // If the server was turned off and is now turned on
+                    inputData = Encoding.ASCII.GetBytes(""); // Delete what was stored in the buffer when the server was off
+                    turnedOff = false;
+                }
+                else {
+                    for (int i = 9; i >= 1; i--) {
+                        chatHistoryArray[i] = chatHistoryArray[i - 1]; // Move the history up one position 
+                    }
+                    chatHistoryArray[0] = serverEP.Address.ToString() + " at " + DateTime.Now.ToString() + ": " + Encoding.ASCII.GetString(inputData); // Insert the received information in the history
+                    if (Encoding.ASCII.GetString(inputData) == "r") { // If a request is received
+                        // Send data
+                        byte[] outputData = Encoding.ASCII.GetBytes(yValues[9].ToString());
+                        udpServer.Send(outputData, Encoding.ASCII.GetString(outputData).Length, serverEP);
+                        for (int i = 7; i >= 1; i--) {
+                            chatHistoryArray[i] = chatHistoryArray[i - 1]; // Move the history up one position
+                        }
+                        chatHistoryArray[0] = hostAddress + " at " + DateTime.Now.ToString() + ": " + Encoding.ASCII.GetString(outputData); // Insert the sent data in the history
+                    }
+                    chatHistory = "";
+                    for (int i = 9; i >= 0; i--) {
+                        chatHistory += chatHistoryArray[i] + "\r\n\r\n"; // Append the history in a single String
+                    }
+                    this.Invoke((MethodInvoker)delegate {
+                        chat.Text = chatHistory; // Update the history
+                    });
+                }
             }
-            else {
-                textBox1.Text = "Please enter a correct IP address and port";
+        }
+
+        private void udpOnButton_Click(object sender, EventArgs e) {
+            if (!started) { // If the innitial hasn't been done
+                if (int.TryParse(portInput.Text, out port)) {
+                    serverEP = new IPEndPoint(IPAddress.Any, port);
+                    udpServer = new UdpClient(serverEP);
+                    // Start the thread
+                    serverThread = new Thread(() => Listen());
+                    serverThread.Start();
+                    statusIndicator.Value = 100;
+                    status = true;
+                    started = true;
+                    chat.Text = "";
+                }
+                else {
+                    chat.Text = "Please input a correct port";
+                }
+            }
+            else { // Once the innitial configuration has been done
+                if (status) { // If the server's turned off
+                    serverThread.Abort();
+                    statusIndicator.Value = 0;
+                    status = false;
+                    turnedOff = true;
+                }
+                else { // If the server's turned on
+                    serverThread = new Thread(() => Listen());
+                    serverThread.Start();
+                    statusIndicator.Value = 100;
+                    status = true;
+                }
             }
         }
     }
