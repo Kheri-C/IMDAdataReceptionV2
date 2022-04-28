@@ -333,6 +333,7 @@ namespace IMDAdataReceptionV2 {
         }
 
         #endregion
+
         #region Testing
 
         #region Timer
@@ -350,7 +351,7 @@ namespace IMDAdataReceptionV2 {
         private void OnTimedEvent(Object source, ElapsedEventArgs e)
         {
             this.Invoke((MethodInvoker)delegate {
-                int temp = random.Next(0, 9);
+                int temp = random.Next(1, 9);
                 inputValues.Enqueue(temp);
                 Console.WriteLine(inputValues.Count.ToString() + " Value: " + temp);
                 serialchartUpdate(inputValues, xChartRange);

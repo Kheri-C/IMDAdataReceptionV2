@@ -334,7 +334,12 @@ namespace IMDAdataReceptionV2 {
             // 
             this.manualdataUpDown.Location = new System.Drawing.Point(155, 22);
             this.manualdataUpDown.Maximum = new decimal(new int[] {
-            10,
+            9,
+            0,
+            0,
+            0});
+            this.manualdataUpDown.Minimum = new decimal(new int[] {
+            1,
             0,
             0,
             0});
@@ -342,7 +347,7 @@ namespace IMDAdataReceptionV2 {
             this.manualdataUpDown.Size = new System.Drawing.Size(42, 20);
             this.manualdataUpDown.TabIndex = 4;
             this.manualdataUpDown.Value = new decimal(new int[] {
-            10,
+            9,
             0,
             0,
             0});
